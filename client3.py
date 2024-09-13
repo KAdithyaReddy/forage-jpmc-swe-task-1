@@ -17,16 +17,17 @@
 #  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
+#
+################################################################################
 
 import json
-import math
 import random
 import urllib.request
 
 # Server API URLs
 QUERY = "http://localhost:8080/query?id={}"
 
-# 500 server request
+# 500 server requests
 N = 500
 
 
@@ -39,13 +40,11 @@ def getDataPoint(quote):
     return stock, bid_price, ask_price, price
 
 
-
 def getRatio(price_a, price_b):
-    """Return the ratio of price_a to price_b, handling the division by zero case."""
+    """Return the ratio of price_a to price_b, handling division by zero."""
     if price_b == 0:
-        return None  # Return None if price_b is zero to avoid division by zero
+        return None  # Handle division by zero
     return price_a / price_b
-
 
 
 # Main
@@ -54,11 +53,15 @@ if __name__ == "__main__":
     for _ in iter(range(N)):
         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
 
-        """ ----------- Update to get the ratio --------------- """
         prices = {}
         for quote in quotes:
             stock, bid_price, ask_price, price = getDataPoint(quote)
             prices[stock] = price
             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
 
-        print("Ratio %s" % getRatio(prices["ABC"], prices["DEF"]))
+        # Calculate and print the ratio of stock prices
+        if "ABC" in prices and "DEF" in prices:
+            ratio = getRatio(prices["ABC"], prices["DEF"])
+            print(f"Ratio of ABC to DEF: {ratio}")
+        else:
+            print("Stock data for ABC or DEF not available.")
