@@ -65,3 +65,4 @@ if __name__ == "__main__":
             print(f"Ratio of ABC to DEF: {ratio}")
         else:
             print("Stock data for ABC or DEF not available.")
+

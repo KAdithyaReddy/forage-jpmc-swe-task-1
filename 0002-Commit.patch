@@ -1,22 +1,43 @@
-From 782a7dfc7bb774ae73b8d303471f760b2465fa7b Mon Sep 17 00:00:00 2001
+From 5babffe6d673995d73383a951304dc9355e8b8ac Mon Sep 17 00:00:00 2001
 From: KAdithyaReddy <adithyareddi23@gmail.com>
-Date: Fri, 13 Sep 2024 15:42:02 +0530
-Subject: [PATCH 2/2] Commit
+Date: Fri, 13 Sep 2024 15:48:41 +0530
+Subject: [PATCH 2/4] Commit
 
 ---
- client3.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ client3.py | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/client3.py b/client3.py
-index 3eed0b1..660e92d 100644
+index 660e92d..6304da6 100644
 --- a/client3.py
 +++ b/client3.py
-@@ -46,7 +46,7 @@ def getRatio(price_a, price_b):
+@@ -31,22 +31,21 @@ N = 500
+ 
+ 
+ def getDataPoint(quote):
+-    """ Produce all the needed values to generate a datapoint """
+-    """ ------------- Update this function ------------- """
++    """Generate the data point with stock name, bid price, ask price, and calculated price."""
+     stock = quote['stock']
+     bid_price = float(quote['top_bid']['price'])
+     ask_price = float(quote['top_ask']['price'])
+-    price = (bid_price + ask_price) / 2
++    price = (bid_price + ask_price) / 2  # Calculate the average of bid and ask prices
+     return stock, bid_price, ask_price, price
+ 
+ 
++
+ def getRatio(price_a, price_b):
+-    """ Get ratio of price_a and price_b """
+-    """ ------------- Update this function ------------- """
++    """Return the ratio of price_a to price_b, handling the division by zero case."""
      if price_b == 0:
-         return
-     else:
--        return price_a / price_b
-+        return price_a // price_b
+-        return
+-    else:
+-        return price_a // price_b
++        return None  # Return None if price_b is zero to avoid division by zero
++    return price_a / price_b
++
  
  
  # Main

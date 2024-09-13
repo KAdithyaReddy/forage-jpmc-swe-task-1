@@ -1,0 +1,182 @@
+From 868da0470b0baa37fc50560c0a6c166cd6948016 Mon Sep 17 00:00:00 2001
+From: KAdithyaReddy <adithyareddi23@gmail.com>
+Date: Fri, 13 Sep 2024 15:48:52 +0530
+Subject: [PATCH 3/4] Commit
+
+---
+ .idea/.gitignore                              |  8 ++++++
+ .idea/forage-jpmc-swe-task-1.iml              | 12 +++++++++
+ .../inspectionProfiles/profiles_settings.xml  |  6 +++++
+ .idea/misc.xml                                |  7 ++++++
+ .idea/modules.xml                             |  8 ++++++
+ .idea/vcs.xml                                 |  6 +++++
+ 0001-Commit.patch                             | 25 +++++++++++++++++++
+ 0002-Commit.patch                             | 25 +++++++++++++++++++
+ multi_commit.patch                            |  0
+ 9 files changed, 97 insertions(+)
+ create mode 100644 .idea/.gitignore
+ create mode 100644 .idea/forage-jpmc-swe-task-1.iml
+ create mode 100644 .idea/inspectionProfiles/profiles_settings.xml
+ create mode 100644 .idea/misc.xml
+ create mode 100644 .idea/modules.xml
+ create mode 100644 .idea/vcs.xml
+ create mode 100644 0001-Commit.patch
+ create mode 100644 0002-Commit.patch
+ create mode 100644 multi_commit.patch
+
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+index 0000000..13566b8
+--- /dev/null
++++ b/.idea/.gitignore
+@@ -0,0 +1,8 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
+diff --git a/.idea/forage-jpmc-swe-task-1.iml b/.idea/forage-jpmc-swe-task-1.iml
+new file mode 100644
+index 0000000..8b8c395
+--- /dev/null
++++ b/.idea/forage-jpmc-swe-task-1.iml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="PYTHON_MODULE" version="4">
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$" />
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++  <component name="PyDocumentationSettings">
++    <option name="format" value="PLAIN" />
++    <option name="myDocStringFormat" value="Plain" />
++  </component>
++</module>
+\ No newline at end of file
+diff --git a/.idea/inspectionProfiles/profiles_settings.xml b/.idea/inspectionProfiles/profiles_settings.xml
+new file mode 100644
+index 0000000..105ce2d
+--- /dev/null
++++ b/.idea/inspectionProfiles/profiles_settings.xml
+@@ -0,0 +1,6 @@
++<component name="InspectionProjectProfileManager">
++  <settings>
++    <option name="USE_PROJECT_PROFILE" value="false" />
++    <version value="1.0" />
++  </settings>
++</component>
+\ No newline at end of file
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+index 0000000..a6218fe
+--- /dev/null
++++ b/.idea/misc.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Black">
++    <option name="sdkName" value="Python 3.11" />
++  </component>
++  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11" project-jdk-type="Python SDK" />
++</project>
+\ No newline at end of file
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+new file mode 100644
+index 0000000..973696f
+--- /dev/null
++++ b/.idea/modules.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/forage-jpmc-swe-task-1.iml" filepath="$PROJECT_DIR$/.idea/forage-jpmc-swe-task-1.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+index 0000000..35eb1dd
+--- /dev/null
++++ b/.idea/vcs.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/0001-Commit.patch b/0001-Commit.patch
+new file mode 100644
+index 0000000..c47e211
+--- /dev/null
++++ b/0001-Commit.patch
+@@ -0,0 +1,25 @@
++From 782a7dfc7bb774ae73b8d303471f760b2465fa7b Mon Sep 17 00:00:00 2001
++From: KAdithyaReddy <adithyareddi23@gmail.com>
++Date: Fri, 13 Sep 2024 15:42:02 +0530
++Subject: [PATCH] Commit
++
++---
++ client3.py | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/client3.py b/client3.py
++index 3eed0b1..660e92d 100644
++--- a/client3.py
+++++ b/client3.py
++@@ -46,7 +46,7 @@ def getRatio(price_a, price_b):
++     if price_b == 0:
++         return
++     else:
++-        return price_a / price_b
+++        return price_a // price_b
++ 
++ 
++ # Main
++-- 
++2.46.0.windows.1
++
+diff --git a/0002-Commit.patch b/0002-Commit.patch
+new file mode 100644
+index 0000000..09c3a43
+--- /dev/null
++++ b/0002-Commit.patch
+@@ -0,0 +1,25 @@
++From 782a7dfc7bb774ae73b8d303471f760b2465fa7b Mon Sep 17 00:00:00 2001
++From: KAdithyaReddy <adithyareddi23@gmail.com>
++Date: Fri, 13 Sep 2024 15:42:02 +0530
++Subject: [PATCH 2/2] Commit
++
++---
++ client3.py | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/client3.py b/client3.py
++index 3eed0b1..660e92d 100644
++--- a/client3.py
+++++ b/client3.py
++@@ -46,7 +46,7 @@ def getRatio(price_a, price_b):
++     if price_b == 0:
++         return
++     else:
++-        return price_a / price_b
+++        return price_a // price_b
++ 
++ 
++ # Main
++-- 
++2.46.0.windows.1
++
+diff --git a/multi_commit.patch b/multi_commit.patch
+new file mode 100644
+index 0000000..e69de29
+-- 
+2.46.0.windows.1
+
