@@ -31,22 +31,21 @@ N = 500
 
 
 def getDataPoint(quote):
-    """ Produce all the needed values to generate a datapoint """
-    """ ------------- Update this function ------------- """
+    """Generate the data point with stock name, bid price, ask price, and calculated price."""
     stock = quote['stock']
     bid_price = float(quote['top_bid']['price'])
     ask_price = float(quote['top_ask']['price'])
-    price = (bid_price + ask_price) / 2
+    price = (bid_price + ask_price) / 2  # Calculate the average of bid and ask prices
     return stock, bid_price, ask_price, price
 
 
+
 def getRatio(price_a, price_b):
-    """ Get ratio of price_a and price_b """
-    """ ------------- Update this function ------------- """
+    """Return the ratio of price_a to price_b, handling the division by zero case."""
     if price_b == 0:
-        return
-    else:
-        return price_a // price_b
+        return None  # Return None if price_b is zero to avoid division by zero
+    return price_a / price_b
+
 
 
 # Main
