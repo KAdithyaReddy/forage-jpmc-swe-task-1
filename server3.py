@@ -19,7 +19,6 @@
 #  DEALINGS IN THE SOFTWARE.
 
 import csv
-# from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 import http.server
 import json
 import operator
@@ -27,7 +26,6 @@ import os.path
 import re
 import threading
 from datetime import timedelta, datetime
-# from itertools import izip
 from random import normalvariate, random
 from socketserver import ThreadingMixIn
 
@@ -37,47 +35,41 @@ import dateutil.parser
 #
 # Config
 
-# Sim params
-
+# Simulation parameters
 REALTIME = True
 SIM_LENGTH = timedelta(days=365 * 5)
 MARKET_OPEN = datetime.today().replace(hour=0, minute=30, second=0)
 
-# Market parms
-#       min  / max  / std
-SPD = (2.0, 6.0, 0.1)
-PX = (60.0, 150.0, 1)
-FREQ = (12, 36, 50)
+# Market parameters
+SPD = (2.0, 6.0, 0.1)  # spread
+PX = (60.0, 150.0, 1)  # price
+FREQ = (12, 36, 50)  # frequency
 
-# Trades
-
+# Trade overlap
 OVERLAP = 4
-
 
 ################################################################################
 #
 # Test Data
 
-def bwalk(min, max, std):
+def bwalk(min_val, max_val, std):
     """ Generates a bounded random walk. """
-    rng = max - min
+    rng = max_val - min_val
     while True:
-        max += normalvariate(0, std)
-        yield abs((max % (rng * 2)) - rng) + min
+        max_val += normalvariate(0, std)
+        yield abs((max_val % (rng * 2)) - rng) + min_val
 
 
 def market(t0=MARKET_OPEN):
-    """ Generates a random series of market conditions,
-        (time, price, spread).
-    """
+    """ Generates a random series of market conditions: (time, price, spread). """
     for hours, px, spd in zip(bwalk(*FREQ), bwalk(*PX), bwalk(*SPD)):
         yield t0, px, spd
         t0 += timedelta(hours=abs(hours))
 
 
 def orders(hist):
-    """ Generates a random set of limit orders (time, side, price, size) from
-        a series of market conditions.
+    """ Generates a random set of limit orders (time, side, price, size)
+        from a series of market conditions.
     """
     for t, px, spd in hist:
         stock = 'ABC' if random() > 0.5 else 'DEF'
@@ -89,7 +81,7 @@ def orders(hist):
 
 ################################################################################
 #
-# Order Book
+# Order Book Functions
 
 def add_book(book, order, size, _age=10):
     """ Add a new order and size to a book, and age the rest of the book. """
@@ -100,10 +92,7 @@ def add_book(book, order, size, _age=10):
 
 
 def clear_order(order, size, book, op=operator.ge, _notional=0):
-    """ Try to clear a sized order against a book, returning a tuple of
-        (notional, new_book) if successful, and None if not.  _notional is a
-        recursive accumulator and should not be provided by the caller.
-    """
+    """ Try to clear a sized order against a book. """
     (top_order, top_size, age), tail = book[0], book[1:]
     if op(order, top_order):
         _notional += min(size, top_size) * top_order
@@ -115,9 +104,7 @@ def clear_order(order, size, book, op=operator.ge, _notional=0):
 
 
 def clear_book(buy=None, sell=None):
-    """ Clears all crossed orders from a buy and sell book, returning the new
-        books uncrossed.
-    """
+    """ Clears all crossed orders from a buy and sell book, returning the new uncrossed books. """
     while buy and sell:
         order, size, _ = buy[0]
         new_book = clear_order(order, size, sell)
@@ -130,9 +117,9 @@ def clear_book(buy=None, sell=None):
 
 
 def order_book(orders, book, stock_name):
-    """ Generates a series of order books from a series of orders.  Order books
-        are mutable lists, and mutating them during generation will affect the
-        next turn!
+    """ Generates a series of order books from a series of orders.
+        Order books are mutable lists, and mutating them during generation
+        will affect the next turn!
     """
     for t, stock, side, order, size in orders:
         if stock_name == stock:
@@ -148,7 +135,7 @@ def order_book(orders, book, stock_name):
 
 def generate_csv():
     """ Generate a CSV of order history. """
-    with open('test.csv', 'wb') as f:
+    with open('test.csv', 'w', newline='') as f:  # Changed 'wb' to 'w' for Python 3 compatibility
         writer = csv.writer(f)
         for t, stock, side, order, size in orders(market()):
             if t > MARKET_OPEN + SIM_LENGTH:
@@ -168,9 +155,7 @@ def read_csv():
 # Server
 
 class ThreadedHTTPServer(ThreadingMixIn, http.server.HTTPServer):
-    """ Boilerplate class for a multithreaded HTTP Server, with working
-        shutdown.
-    """
+    """ Multithreaded HTTP Server with proper shutdown handling. """
     allow_reuse_address = True
 
     def shutdown(self):
@@ -180,9 +165,7 @@ class ThreadedHTTPServer(ThreadingMixIn, http.server.HTTPServer):
 
 
 def route(path):
-    """ Decorator for a simple bottle-like web framework.  Routes path to the
-        decorated method, with the rest of the path as an argument.
-    """
+    """ Decorator for routing. """
 
     def _route(f):
         setattr(f, '__route__', path)
@@ -192,9 +175,7 @@ def route(path):
 
 
 def read_params(path):
-    """ Read query parameters into a dictionary if they are parseable,
-        otherwise returns None.
-    """
+    """ Parse query parameters into a dictionary. """
     query = path.split('?')
     if len(query) > 1:
         query = query[1].split('&')
@@ -205,7 +186,7 @@ def get(req_handler, routes):
     """ Map a request to the appropriate route of a routes instance. """
     for name, handler in routes.__class__.__dict__.items():
         if hasattr(handler, "__route__"):
-            if None != re.search(handler.__route__, req_handler.path):
+            if re.search(handler.__route__, req_handler.path):
                 req_handler.send_response(200)
                 req_handler.send_header('Content-Type', 'application/json')
                 req_handler.send_header('Access-Control-Allow-Origin', '*')
@@ -217,10 +198,7 @@ def get(req_handler, routes):
 
 
 def run(routes, host='0.0.0.0', port=8080):
-    """ Runs a class as a server whose methods have been decorated with
-        @route.
-    """
-
+    """ Runs the HTTP server and routes requests. """
     class RequestHandler(http.server.BaseHTTPRequestHandler):
         def log_message(self, *args, **kwargs):
             pass
@@ -232,13 +210,16 @@ def run(routes, host='0.0.0.0', port=8080):
     thread = threading.Thread(target=server.serve_forever)
     thread.daemon = True
     thread.start()
-    print('HTTP server started on port 8080')
-    while True:
-        from time import sleep
-        sleep(1)
-    server.shutdown()
-    server.start()
-    server.waitForThread()
+    print(f'HTTP server started on port {port}')
+    try:
+        while True:
+            from time import sleep
+            sleep(1)
+    except KeyboardInterrupt:
+        print('Server shutting down...')
+    finally:
+        server.shutdown()
+        server.server_close()
 
 
 ################################################################################
@@ -251,7 +232,7 @@ ops = {
 }
 
 
-class App(object):
+class App:
     """ The trading game server application. """
 
     def __init__(self):
@@ -260,81 +241,4 @@ class App(object):
         self._data_1 = order_book(read_csv(), self._book_1, 'ABC')
         self._data_2 = order_book(read_csv(), self._book_2, 'DEF')
         self._rt_start = datetime.now()
-        self._sim_start, _, _ = next(self._data_1)
-        self.read_10_first_lines()
-
-    @property
-    def _current_book_1(self):
-        for t, bids, asks in self._data_1:
-            if REALTIME:
-                while t > self._sim_start + (datetime.now() - self._rt_start):
-                    yield t, bids, asks
-            else:
-                yield t, bids, asks
-
-    @property
-    def _current_book_2(self):
-        for t, bids, asks in self._data_2:
-            if REALTIME:
-                while t > self._sim_start + (datetime.now() - self._rt_start):
-                    yield t, bids, asks
-            else:
-                yield t, bids, asks
-
-    def read_10_first_lines(self):
-        for _ in iter(range(10)):
-            next(self._data_1)
-            next(self._data_2)
-
-    @route('/query')
-    def handle_query(self, x):
-        """ Takes no arguments, and yields the current top of the book;  the
-            best bid and ask and their sizes
-        """
-        try:
-            t1, bids1, asks1 = next(self._current_book_1)
-            t2, bids2, asks2 = next(self._current_book_2)
-        except Exception as e:
-            print("error getting stocks...reinitalizing app")
-            self.__init__()
-            t1, bids1, asks1 = next(self._current_book_1)
-            t2, bids2, asks2 = next(self._current_book_2)
-        t = t1 if t1 > t2 else t2
-        print('Query received @ t%s' % t)
-        return [{
-            'id': x and x.get('id', None),
-            'stock': 'ABC',
-            'timestamp': str(t),
-            'top_bid': bids1 and {
-                'price': bids1[0][0],
-                'size': bids1[0][1]
-            },
-            'top_ask': asks1 and {
-                'price': asks1[0][0],
-                'size': asks1[0][1]
-            }
-        },
-            {
-                'id': x and x.get('id', None),
-                'stock': 'DEF',
-                'timestamp': str(t),
-                'top_bid': bids2 and {
-                    'price': bids2[0][0],
-                    'size': bids2[0][1]
-                },
-                'top_ask': asks2 and {
-                    'price': asks2[0][0],
-                    'size': asks2[0][1]
-                }
-            }]
-
-
-################################################################################
-#
-# Main
-
-if __name__ == '__main__':
-    if not os.path.isfile('test.csv'):
-        print("No data found, generating...")
-        generate_csv()
-    run(App())
+        self._sim_start,
